@@ -2,5 +2,6 @@ using UnityEngine;
 
 public interface IShooter
 {
-    public Material GetBulletMaterial();
+    Material GetBulletMaterial();
+    void AddGamePoints(int gamePoints);
 }

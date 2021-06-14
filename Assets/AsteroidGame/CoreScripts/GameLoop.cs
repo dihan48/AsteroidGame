@@ -3,54 +3,73 @@ using UnityEngine;
 
 public class GameLoop : MonoBehaviour
 {
-    [SerializeField]
-    private int startCountAsteroids = 2;
-
-    [SerializeField]
-    private int countAddedToAsteroidSpawn = 1;
-
-    [SerializeField]
-    private float spawnAsteroidsDelay = 5f;
-
+    [Header("Basic objects")]
     [SerializeField]
     private Starship spaceship;
-
     [SerializeField]
     private ObjectPool asteroidPool;
-
     [SerializeField]
     private ObjectPool bulletPool;
-
     [SerializeField]
     private UfoProvider UfoProvider;
 
-    private int countAsteroids;
+    #region TODO перенести логику к пулу астероидов, здесь ей не место
+    [Header("Basic properties of asteroids")] 
+    [SerializeField]
+    private int startCountAsteroids = 2;
+    [SerializeField]
+    private int countAddedToAsteroidSpawn = 1;
+    [SerializeField]
+    private float spawnAsteroidsDelay = 5f;
 
-    private bool IsPause = false;
+    private int countAsteroids;
+    #endregion
+
+    public delegate void OnPause(bool isPause);
+    public event OnPause onPause;
+
+    public bool IsGameStarted => isGameStarted;
+    public bool IsPause {
+        get => isPause;
+        set
+        {
+            Time.timeScale = value ? 0: 1;
+            onPause?.Invoke(value);
+            isPause = value;
+        }
+    }
+
+    private bool isGameStarted;
+    private bool isPause;
 
     private IEnumerator coroutineRespawnAsteroids;
 
     private void Start()
     {
+        StartMenu();
+    }
+
+    private void StartMenu()
+    {
+        isGameStarted = false;
+        IsPause = true;
+    }
+
+    public void Init()
+    {
         countAsteroids = startCountAsteroids;
         SpawnAsteroids();
         asteroidPool.onInUseEmpty += StartRespawnAsteroids;
-        spaceship.onExploded += Restart;
+        spaceship.gameObject.SetActive(true);
+        spaceship.onExploded += GameOver;
         UfoProvider.Init();
     }
 
-    private void Update()
+    public void Pause()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (isGameStarted)
         {
-            if (IsPause)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
-            }
+            IsPause = !IsPause;
         }
     }
 
@@ -62,16 +81,18 @@ public class GameLoop : MonoBehaviour
         }
     }
 
-    private void PauseGame()
+    public void StartGame()
     {
-        Time.timeScale = 0;
-        IsPause = true;
-    }
-
-    private void ResumeGame()
-    {
-        Time.timeScale = 1;
         IsPause = false;
+        if (isGameStarted)
+        {
+            Restart();
+        }
+        else
+        {
+            isGameStarted = true;
+            Init();
+        }
     }
 
     private void StartRespawnAsteroids()
@@ -89,20 +110,34 @@ public class GameLoop : MonoBehaviour
 
     public void Restart()
     {
-        if(coroutineRespawnAsteroids != null)
+        GameEnd();
+        Init();
+    }
+
+    private void GameOver()
+    {
+        GameEnd();
+        StartMenu();
+    }
+
+    private void GameEnd()
+    {
+        if (coroutineRespawnAsteroids != null)
         {
             StopCoroutine(coroutineRespawnAsteroids);
         }
 
+        spaceship.ResetPoints();
+        spaceship.Respawn();
+        spaceship.gameObject.SetActive(false);
+
         asteroidPool.onInUseEmpty -= StartRespawnAsteroids;
-        spaceship.onExploded -= Restart;
+        spaceship.onExploded -= GameOver;
 
         asteroidPool.AllRelease();
         bulletPool.AllRelease();
-        
+
         UfoProvider.StopSpawn();
         UfoProvider.DeleteUfo();
-
-        Start();
     }
 }

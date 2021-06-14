@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Starship : MonoBehaviour, IShooter
+public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
 {
     [SerializeField]
     private float accelerate = 5;
@@ -26,9 +26,42 @@ public class Starship : MonoBehaviour, IShooter
     [SerializeField]
     private int startHealthhPoints = 3;
 
-
     public delegate void OnExploded();
     public event OnExploded onExploded;
+
+    public delegate void OnChangeHealth(int countHP);
+    public event OnChangeHealth onChangeHealth;
+
+    public delegate void OnChangeGamehPoints(int countGP);
+    public event OnChangeGamehPoints onChangeGamehPoints;
+
+    private int countGP;
+    private int CountGamePoints
+    {
+        get
+        {
+            return countGP;
+        }
+        set
+        {
+            onChangeGamehPoints?.Invoke(value);
+            countGP = value;
+        }
+    }
+
+    private int countHP;
+    private int CountHealthPoints
+    {
+        get
+        {
+            return countHP;
+        }
+        set
+        {
+            onChangeHealth?.Invoke(value);
+            countHP = value;
+        }
+    }
 
     private Rigidbody rb;
     private Collider collider;
@@ -36,12 +69,24 @@ public class Starship : MonoBehaviour, IShooter
     private Quaternion startRotation;
     private Vector3 startPosition;
 
+    private IEnumerator coroutineShotDelay;
+    private IEnumerator coroutineBlink;
+
     private bool canShot = true;
-    private int HP;
 
     public Material GetBulletMaterial()
     {
         return bulletMeterial;
+    }
+
+    public int GetGamePoints()
+    {
+        return 0;
+    }
+
+    public void AddGamePoints(int gamePoints)
+    {
+        CountGamePoints += gamePoints;
     }
 
     private void Start()
@@ -50,13 +95,13 @@ public class Starship : MonoBehaviour, IShooter
         collider = GetComponent<Collider>();
         startRotation = transform.rotation;
         startPosition = transform.position;
-        HP = startHealthhPoints;
+        CountHealthPoints = startHealthhPoints;
+        CountGamePoints = 0;
     }
 
     private void Update()
     {
         GameWorld.instance.SetInsideScreenPosition(transform);
-        InputHandler();
         ApplySpeedLimit();
     }
 
@@ -68,31 +113,33 @@ public class Starship : MonoBehaviour, IShooter
         }
     }
 
-    private void InputHandler()
+    public void TurnRight()
     {
-        if (Time.timeScale == 0) return;
+        transform.Rotate(0f, 0f, -180.0f * speedRotate * Time.deltaTime);
+    }
+    public void TurnLeft()
+    {
+        transform.Rotate(0f, 0f, 180.0f * speedRotate * Time.deltaTime);
+    }
+    public void Acceleration()
+    {
+        rb.AddForce(transform.up * accelerate);
+    }
+    public void Shooting()
+    {
+        if (canShot)
+        {
+            Shot();
+            canShot = false;
+            coroutineShotDelay = ShotDelay();
+            StartCoroutine(coroutineShotDelay);
+        }
+    }
 
-        if (Input.GetKey("d"))
-        {
-            transform.Rotate(0f, 0f, -180.0f * speedRotate * Time.deltaTime);
-        }
-        if (Input.GetKey("a"))
-        {
-            transform.Rotate(0f, 0f, 180.0f * speedRotate * Time.deltaTime);
-        }
-        if (Input.GetKey("w"))
-        {
-            rb.AddForce(transform.up * accelerate);
-        }
-        if (Input.GetKeyDown("space"))
-        {
-            if (canShot)
-            {
-                Shot();
-                canShot = false;
-                StartCoroutine(ShotDelay());
-            }
-        }
+    public void LookAt(Vector3 position)
+    {
+        Vector2 direction = Vector3.Lerp(transform.up, ((Vector2)position - (Vector2)transform.position).normalized, speedRotate * 4 * Time.deltaTime);
+        transform.up = direction;
     }
 
     private IEnumerator ShotDelay()
@@ -115,21 +162,52 @@ public class Starship : MonoBehaviour, IShooter
 
         if (asteroid != null || (bullet != null && bullet.Shooter != this) || ufo != null)
         {
-            HP--;
-            if (HP == 0)
+            Debug.Log("Старшип взорвался! Илон будет не доволен... :(");
+
+            CountHealthPoints--;
+            if (CountHealthPoints == 0)
             {
                 onExploded?.Invoke();
-                HP = startHealthhPoints;
+                ResetPoints();
+                Respawn();
             }
             else
             {
-                collider.enabled = false;
-                StartCoroutine(Blink());
+                Blinking();
+                Respawn();
             }
-            Debug.Log("Старшип взорвался! Илон будет не доволен... :(");
-            transform.rotation = startRotation;
-            transform.position = startPosition;
-            rb.velocity = Vector3.zero;
+        }
+    }
+
+    private void Blinking()
+    {
+        collider.enabled = false;
+        coroutineBlink = Blink();
+        StartCoroutine(coroutineBlink);
+    }
+
+    public void Respawn()
+    {
+        transform.rotation = startRotation;
+        transform.position = startPosition;
+        rb.velocity = Vector3.zero;
+
+        if(coroutineShotDelay != null)
+        {
+            StopCoroutine(coroutineShotDelay);
+        }
+
+        canShot = true;
+    }
+
+    public void ResetPoints()
+    {
+        CountHealthPoints = startHealthhPoints;
+        CountGamePoints = 0;
+
+        if (coroutineBlink != null)
+        {
+            StopCoroutine(coroutineBlink);
         }
     }
 

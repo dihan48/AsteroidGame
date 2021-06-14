@@ -2,18 +2,12 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour, IObjectPool
 {
-    public event OnRelease onRelease;
-
-    public IShooter Shooter
-    {
-        get
-        {
-            return shooter;
-        }
-    }
-
     [SerializeField]
     private float speed = 15;
+
+    public event OnRelease onRelease;
+
+    public IShooter Shooter => shooter;
 
     private float maxDistance = 20;
     private float distance = 0;
@@ -64,7 +58,7 @@ public class Bullet : MonoBehaviour, IObjectPool
         GameWorld.instance.SetInsideScreenPosition(transform);
         distance += translate.magnitude;
 
-        if(distance > maxDistance)
+        if (distance > maxDistance)
         {
             Destroy();
         }
@@ -78,11 +72,17 @@ public class Bullet : MonoBehaviour, IObjectPool
 
     private void OnTriggerEnter(Collider collider)
     {
-        BaseAsteroid asteroid = collider.gameObject.GetComponent<BaseAsteroid>();
-        IShooter _shooter = collider.gameObject.GetComponent<IShooter>();
-        if (asteroid != null || (_shooter != null && shooter != _shooter))
+        ItriggerOnBullet triggerOnBullet = collider.gameObject.GetComponent<ItriggerOnBullet>();
+
+        if (triggerOnBullet != null)
         {
-            Destroy();
+            IShooter _shooter = collider.gameObject.GetComponent<IShooter>();
+
+            if (_shooter == null || shooter != _shooter)
+            {
+                Destroy();
+                shooter.AddGamePoints(triggerOnBullet.GetGamePoints());
+            }
         }
     }
 }

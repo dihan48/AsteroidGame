@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Ufo : MonoBehaviour, IShooter
+public class Ufo : MonoBehaviour, IShooter, ItriggerOnBullet
 {
     [SerializeField]
     private Transform Starship;
@@ -13,6 +13,8 @@ public class Ufo : MonoBehaviour, IShooter
     private float minShotDelay = 2f;
     [SerializeField]
     private float maxShotDelay = 5f;
+    [SerializeField]
+    private int gamePoints = 200;
 
     private int spawnBorderIndex;
     private Vector3 direction;
@@ -43,6 +45,16 @@ public class Ufo : MonoBehaviour, IShooter
     public Material GetBulletMaterial()
     {
         return bulletMeterial;
+    }
+
+    public void AddGamePoints(int gamePoints)
+    {
+    
+    }
+
+    public int GetGamePoints()
+    {
+        return gamePoints;
     }
 
     private void Update()

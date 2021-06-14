@@ -1,21 +1,18 @@
 using UnityEngine;
 
-public class BaseAsteroid : MonoBehaviour
+public class BaseAsteroid : MonoBehaviour, ItriggerOnBullet
 {
+    [SerializeField]
+    private int gamePoints = 20;
+
     public delegate void OnExplod(BaseAsteroid asteroid);
     public event OnExplod onExplod;
     public event OnExplod onExplodWithoutSpawnParts;
 
-    public Vector2 Direction
-    {
-        get
-        {
-            return direction;
-        }
-    }
+    public Vector2 Direction => direction;
 
-    protected Vector2 direction;
-    protected float speed;
+    private Vector2 direction;
+    private float speed;
 
     public void Init(float _speed, Vector2 _direction, Vector3 position)
     {
@@ -25,7 +22,7 @@ public class BaseAsteroid : MonoBehaviour
         speed = _speed;
     }
 
-    protected virtual void Update()
+    private void Update()
     {
         transform.Translate(direction * speed * Time.deltaTime);
         GameWorld.instance.SetInsideScreenPosition(transform);
@@ -46,5 +43,10 @@ public class BaseAsteroid : MonoBehaviour
             gameObject.SetActive(false);
             onExplodWithoutSpawnParts?.Invoke(this);
         }
+    }
+
+    public int GetGamePoints()
+    {
+        return gamePoints;
     }
 }

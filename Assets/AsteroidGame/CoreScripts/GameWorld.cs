@@ -13,45 +13,11 @@ public class GameWorld : MonoBehaviour
 
     public static GameWorld instance = null;
 
-    public float MinWorldSideSize
-    {
-        get
-        {
-            return minWorldSideSize;
-        }
-    }
-
-    public Vector3 BorderTop
-    {
-        get
-        {
-            return borderTop;
-        }
-    }
-
-    public Vector3 BorderBottom
-    {
-        get
-        {
-            return borderBottom;
-        }
-    }
-
-    public Vector3 BorderRight
-    {
-        get
-        {
-            return borderRight;
-        }
-    }
-
-    public Vector3 BorderLeft
-    {
-        get
-        {
-            return borderLeft;
-        }
-    }
+    public float MinWorldSideSize => minWorldSideSize;
+    public Vector3 BorderTop => borderTop;
+    public Vector3 BorderBottom => borderBottom;
+    public Vector3 BorderRight => borderRight;
+    public Vector3 BorderLeft => borderLeft;
 
     private Vector3 borderTop, borderBottom, borderRight, borderLeft;
 
@@ -88,7 +54,7 @@ public class GameWorld : MonoBehaviour
 
     public void SetInsideScreenPosition(Transform objectTransform)
     {
-        #region воняет
+        #region TODO стоит подумать как переделать
         if (objectTransform.position.y > borderTop.y)
         {
             objectTransform.position += borderBottom * 2;
@@ -111,7 +77,8 @@ public class GameWorld : MonoBehaviour
     public Vector3 RandomAsteroidPosition()
     {
         Vector3 position = Vector3.zero;
-        #region воняет
+
+        #region TODO стоит подумать как переделать
         float interpolationRatio = Random.value;
         int borderIndex = Random.Range(0, 4);
 
@@ -137,7 +104,8 @@ public class GameWorld : MonoBehaviour
     public Vector3 RandomUfoPosition(int borderIndex)
     {
         Vector3 position = Vector3.zero;
-        #region воняет
+
+        #region TODO стоит подумать как переделать
         float interpolationRatio = Random.value;
 
         Vector3 offsetBorderForSpawnUfo = new Vector3(0, heightArea * offsetRatioForSpawnUfo * 2, 0);

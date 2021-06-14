@@ -28,7 +28,6 @@ public class UfoProvider : MonoBehaviour
     {
         float deleyRatio = Random.value;
         float deley = Mathf.Lerp(minSapwnDelay, maxSapwnDelay, deleyRatio);
-        Debug.Log("Ufo spawn delay " + deley);
         yield return new WaitForSeconds(deley);
         SpawnUfo();
     }
