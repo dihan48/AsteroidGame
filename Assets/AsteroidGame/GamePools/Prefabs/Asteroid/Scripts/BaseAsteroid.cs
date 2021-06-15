@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BaseAsteroid : MonoBehaviour, ItriggerOnBullet
@@ -5,9 +6,8 @@ public class BaseAsteroid : MonoBehaviour, ItriggerOnBullet
     [SerializeField]
     private int gamePoints = 20;
 
-    public delegate void OnExplod(BaseAsteroid asteroid);
-    public event OnExplod onExplod;
-    public event OnExplod onExplodWithoutSpawnParts;
+    public Action<BaseAsteroid> onExplod;
+    public Action<BaseAsteroid> onExplodWithoutSpawnParts;
 
     public Vector2 Direction => direction;
 

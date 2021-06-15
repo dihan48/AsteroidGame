@@ -8,9 +8,9 @@ public class Asteroid : MonoBehaviour, IObjectPool
     [SerializeField]
     protected float maxSpeed = 6f;
 
-    public event OnRelease onRelease;
-
     private AsteroidProvider mainAsteroidProvider;
+
+    public System.Action<IObjectPool> onRelease { get; set; }
 
     public void Enable()
     {

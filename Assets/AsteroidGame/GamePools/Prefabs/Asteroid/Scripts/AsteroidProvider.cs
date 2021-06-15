@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AsteroidProvider : MonoBehaviour
@@ -5,8 +6,7 @@ public class AsteroidProvider : MonoBehaviour
     private BaseAsteroid asteroid;
     private AsteroidParts asteroidParts;
 
-    public delegate void OnExplod(AsteroidProvider asteroidProvider);
-    public event OnExplod onClear;
+    public Action<AsteroidProvider> onClear;
 
     public void Init(float speed, Vector2 direction, Vector3 position)
     {

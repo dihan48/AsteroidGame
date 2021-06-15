@@ -21,8 +21,7 @@ public class Ufo : MonoBehaviour, IShooter, ItriggerOnBullet
     private float speed;
     private float shotDelay;
 
-    public delegate void OnExplode();
-    public event OnExplode onExplode;
+    public System.Action onExplode;
 
     private IEnumerator coroutineShotDelay;
 

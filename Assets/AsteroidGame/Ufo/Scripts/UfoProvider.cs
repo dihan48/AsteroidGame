@@ -14,6 +14,7 @@ public class UfoProvider : MonoBehaviour
 
     public void Init()
     {
+        ufo.onExplode += StartSpawnUfoDelay;
         coroutineSpawnUfoDelay = SpawnUfoDelay();
         StartCoroutine(coroutineSpawnUfoDelay);
     }
@@ -29,18 +30,16 @@ public class UfoProvider : MonoBehaviour
         float deleyRatio = Random.value;
         float deley = Mathf.Lerp(minSapwnDelay, maxSapwnDelay, deleyRatio);
         yield return new WaitForSeconds(deley);
-        SpawnUfo();
-    }
-    
-    private void SpawnUfo()
-    {
-        ufo.onExplode += StartSpawnUfoDelay;
         ufo.Init();
     }
 
     public void StopSpawn()
     {
-        StopCoroutine(coroutineSpawnUfoDelay);
+        ufo.onExplode -= StartSpawnUfoDelay;
+        if(coroutineSpawnUfoDelay != null)
+        {
+            StopCoroutine(coroutineSpawnUfoDelay);
+        }
     }
 
     public void DeleteUfo()

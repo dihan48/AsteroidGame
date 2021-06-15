@@ -5,13 +5,12 @@ public class Bullet : MonoBehaviour, IObjectPool
     [SerializeField]
     private float speed = 15;
 
-    public event OnRelease onRelease;
+    public System.Action<IObjectPool> onRelease { get; set; }
 
-    public IShooter Shooter => shooter;
+    public IShooter Shooter { get; private set; }
 
     private float maxDistance = 20;
     private float distance = 0;
-    private IShooter shooter;
 
     public void Enable()
     {
@@ -23,21 +22,21 @@ public class Bullet : MonoBehaviour, IObjectPool
         gameObject.SetActive(false);
     }
 
-    public void SubscribeRelease(OnRelease fnc)
+    public void SubscribeRelease(System.Action<IObjectPool> fnc)
     {
         onRelease += fnc;
     }
 
-    public void UnsubscribeRelease(OnRelease fnc)
+    public void UnsubscribeRelease(System.Action<IObjectPool> fnc)
     {
         onRelease -= fnc;
     }
 
     public void Shot(IShooter _shooter, Vector3 startPosition, Vector2 _direction)
     {
-        shooter = _shooter;
+        Shooter = _shooter;
 
-        Material bulletMaterial = shooter.GetBulletMaterial();
+        Material bulletMaterial = Shooter.GetBulletMaterial();
 
         if (bulletMaterial != null)
         {
@@ -78,10 +77,10 @@ public class Bullet : MonoBehaviour, IObjectPool
         {
             IShooter _shooter = collider.gameObject.GetComponent<IShooter>();
 
-            if (_shooter == null || shooter != _shooter)
+            if (_shooter == null || Shooter != _shooter)
             {
                 Destroy();
-                shooter.AddGamePoints(triggerOnBullet.GetGamePoints());
+                Shooter.AddGamePoints(triggerOnBullet.GetGamePoints());
             }
         }
     }

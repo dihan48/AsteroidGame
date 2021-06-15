@@ -14,8 +14,7 @@ public class AsteroidParts : MonoBehaviour
 
     private List<AsteroidProvider> asteroidProviders = new List<AsteroidProvider>();
 
-    public delegate void OnExplod(AsteroidParts asteroidParts);
-    public event OnExplod onAllClear;
+    public System.Action<AsteroidParts> onAllClear;
 
     public void Init(Vector2 totalDirection, Vector3 partsStartPosition)
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -26,14 +27,9 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     [SerializeField]
     private int startHealthhPoints = 3;
 
-    public delegate void OnExploded();
-    public event OnExploded onExploded;
-
-    public delegate void OnChangeHealth(int countHP);
-    public event OnChangeHealth onChangeHealth;
-
-    public delegate void OnChangeGamehPoints(int countGP);
-    public event OnChangeGamehPoints onChangeGamehPoints;
+    public Action onExploded;
+    public Action<int> onChangeHealth;
+    public Action<int> onChangeGamehPoints;
 
     private int countGP;
     private int CountGamePoints

@@ -1663,12 +1663,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spaceship: {fileID: 141267905}
-  asteroidPool: {fileID: 1478772411}
+  asteroidPoolProvider: {fileID: 1478772412}
   bulletPool: {fileID: 1427793985}
-  UfoProvider: {fileID: 1230852327}
-  startCountAsteroids: 2
-  countAddedToAsteroidSpawn: 1
-  spawnAsteroidsDelay: 2
+  ufoProvider: {fileID: 1230852327}
 --- !u!1 &1478772409
 GameObject:
   m_ObjectHideFlags: 0
@@ -1679,6 +1676,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1478772410}
   - component: {fileID: 1478772411}
+  - component: {fileID: 1478772412}
   m_Layer: 0
   m_Name: AsteroidPool
   m_TagString: Untagged
@@ -1713,6 +1711,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 7566788504059048022, guid: 01966c4e256201a47b2774846862e966, type: 3}
+--- !u!114 &1478772412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1478772409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be34a5ac4698b644f889b029d25956e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startCountAsteroids: 2
+  countAddedToAsteroidSpawn: 1
+  spawnAsteroidsDelay: 2
+  asteroidPool: {fileID: 1478772411}
 --- !u!1 &1592068409
 GameObject:
   m_ObjectHideFlags: 0

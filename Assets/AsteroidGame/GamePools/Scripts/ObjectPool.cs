@@ -62,7 +62,7 @@ public class ObjectPool : MonoBehaviour
 
     public void AllRelease()
     {
-        _inUse.ForEach(delegate (IObjectPool objectInPool)
+        _inUse.ForEach((IObjectPool objectInPool) =>
         {
             objectInPool.onRelease -= Release;
             objectInPool.Disable();

@@ -1,8 +1,8 @@
-public delegate void OnRelease(IObjectPool objectInPool);
+using System;
 
 public interface IObjectPool
 {
-    event OnRelease onRelease;
+    Action<IObjectPool> onRelease { get; set; }
     void Enable();
     void Disable();
 }

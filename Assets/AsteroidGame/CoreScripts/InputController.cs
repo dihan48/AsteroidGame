@@ -35,11 +35,19 @@ public class InputController : MonoBehaviour
         {
             return;
         }
-        if(controlScheme == ControlSchemes.keyboard)
+        if (Input.GetKey("w"))
+        {
+            starship.Acceleration();
+        }
+        if (Input.GetKeyDown("space"))
+        {
+            starship.Shooting();
+        }
+        if (ControlScheme == ControlSchemes.keyboard)
         {
             KeyboardShemeHandler();
         }
-        if (controlScheme == ControlSchemes.mouse)
+        if (ControlScheme == ControlSchemes.mouse)
         {
             MouseShemeHandler();
         }
@@ -54,14 +62,6 @@ public class InputController : MonoBehaviour
         if (Input.GetKey("a"))
         {
             starship.TurnLeft();
-        }
-        if (Input.GetKey("w"))
-        {
-            starship.Acceleration();
-        }
-        if (Input.GetKeyDown("space"))
-        {
-            starship.Shooting();
         }
     }
 
