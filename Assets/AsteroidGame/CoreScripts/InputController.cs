@@ -15,15 +15,7 @@ public class InputController : MonoBehaviour
     [SerializeField]
     private Camera gameCamera;
 
-    private ControlSchemes controlScheme = ControlSchemes.mouse;
-    public ControlSchemes ControlScheme
-    {
-        get => controlScheme;
-        set
-        {
-            controlScheme = value;
-        }
-    }
+    public ControlSchemes ControlScheme { get; set; } = ControlSchemes.mouse;
 
     private void Update()
     {
@@ -31,22 +23,29 @@ public class InputController : MonoBehaviour
         {
             gameLoop.Pause();
         }
+
         if (gameLoop.IsPause)
         {
             return;
         }
-        if (Input.GetKey("w"))
+
+        float v = Input.GetAxisRaw("Vertical");
+
+        if (v > 0)
         {
             starship.Acceleration();
         }
+
         if (Input.GetKeyDown("space"))
         {
             starship.Shooting();
         }
+
         if (ControlScheme == ControlSchemes.keyboard)
         {
             KeyboardShemeHandler();
         }
+
         if (ControlScheme == ControlSchemes.mouse)
         {
             MouseShemeHandler();
@@ -55,11 +54,13 @@ public class InputController : MonoBehaviour
 
     private void KeyboardShemeHandler()
     {
-        if (Input.GetKey("d"))
+        float h = Input.GetAxisRaw("Horizontal");
+
+        if (h > 0)
         {
             starship.TurnRight();
         }
-        if (Input.GetKey("a"))
+        if (h < 0)
         {
             starship.TurnLeft();
         }

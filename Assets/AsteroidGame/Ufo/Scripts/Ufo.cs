@@ -10,20 +10,21 @@ public class Ufo : MonoBehaviour, IShooter, ItriggerOnBullet
     [SerializeField]
     private Material bulletMeterial;
     [SerializeField]
-    private float minShotDelay = 2f;
+    private float minFireDelay = 2f;
     [SerializeField]
-    private float maxShotDelay = 5f;
+    private float maxFireDelay = 5f;
     [SerializeField]
     private int gamePoints = 200;
 
     private int spawnBorderIndex;
     private Vector3 direction;
     private float speed;
-    private float shotDelay;
+    private float fireDelay;
 
+    public System.Action onFire;
     public System.Action onExplode;
 
-    private IEnumerator coroutineShotDelay;
+    private IEnumerator coroutineFireDelay;
 
     public void Init()
     {
@@ -32,13 +33,13 @@ public class Ufo : MonoBehaviour, IShooter, ItriggerOnBullet
         direction = new Vector2(spawnBorderIndex > 0 ? 1 : -1, 0);
         transform.position = GameWorld.instance.RandomUfoPosition(spawnBorderIndex);
 
-        if(coroutineShotDelay != null)
+        if(coroutineFireDelay != null)
         {
-            StopCoroutine(coroutineShotDelay);
+            StopCoroutine(coroutineFireDelay);
         }
         
         gameObject.SetActive(true);
-        StartShotDelay();
+        StartFireDelay();
     }
 
     public Material GetBulletMaterial()
@@ -70,22 +71,23 @@ public class Ufo : MonoBehaviour, IShooter, ItriggerOnBullet
 
     private void Explode()
     {
-        gameObject.SetActive(false);
         onExplode?.Invoke();
+        gameObject.SetActive(false);
     }
 
-    private void StartShotDelay()
+    private void StartFireDelay()
     {
-        coroutineShotDelay = ShotDelay();
-        float shotDelayRatio = Random.value;
-        shotDelay = Mathf.Lerp(minShotDelay, maxShotDelay, shotDelayRatio);
-        StartCoroutine(coroutineShotDelay);
+        coroutineFireDelay = FireDelay();
+        float fireDelayRatio = Random.value;
+        fireDelay = Mathf.Lerp(minFireDelay, maxFireDelay, fireDelayRatio);
+        StartCoroutine(coroutineFireDelay);
     }
 
-    private IEnumerator ShotDelay()
+    private IEnumerator FireDelay()
     {
         while (true){
-            yield return new WaitForSeconds(shotDelay);
+            yield return new WaitForSeconds(fireDelay);
+            onFire?.Invoke();
             Bullet bullet = (Bullet)bulletPool.Get();
             bullet.Shot(this, transform.position, (Starship.position - transform.position).normalized);
         }
@@ -97,7 +99,7 @@ public class Ufo : MonoBehaviour, IShooter, ItriggerOnBullet
         Bullet bullet = collider.gameObject.GetComponent<Bullet>();
         Starship starship = collider.gameObject.GetComponent<Starship>();
 
-        if (asteroid != null || (bullet != null && bullet.Shooter != this) || starship != null)
+        if (asteroid != null || (bullet != null && bullet.Shooter != (IShooter)this) || starship != null)
         {
             Explode();
         }

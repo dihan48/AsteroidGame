@@ -15,7 +15,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     [SerializeField]
     private ObjectPool bulletPool;
     [SerializeField]
-    private float shotDelay = 0.333f;
+    private float fireDelay = 0.333f;
     [SerializeField]
     private Material bulletMeterial;
     [SerializeField]
@@ -27,7 +27,12 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     [SerializeField]
     private int startHealthhPoints = 3;
 
-    public Action onExploded;
+    public Action onFire;
+    public Action onExplode;
+    public Action onEndedHealthPoints;
+    public Action onAcceleration;
+    public Action onBlinking;
+    public Action onBlinked;
     public Action<int> onChangeHealth;
     public Action<int> onChangeGamehPoints;
 
@@ -60,15 +65,15 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     }
 
     private Rigidbody rb;
-    private Collider collider;
+    private new Collider collider;
 
     private Quaternion startRotation;
     private Vector3 startPosition;
 
-    private IEnumerator coroutineShotDelay;
+    private IEnumerator coroutineFireDelay;
     private IEnumerator coroutineBlink;
 
-    private bool canShot = true;
+    private bool canFire = true;
 
     public Material GetBulletMaterial()
     {
@@ -120,15 +125,16 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     public void Acceleration()
     {
         rb.AddForce(transform.up * accelerate);
+        onAcceleration?.Invoke();
     }
     public void Shooting()
     {
-        if (canShot)
+        if (canFire)
         {
-            Shot();
-            canShot = false;
-            coroutineShotDelay = ShotDelay();
-            StartCoroutine(coroutineShotDelay);
+            Fire();
+            canFire = false;
+            coroutineFireDelay = FireDelay();
+            StartCoroutine(coroutineFireDelay);
         }
     }
 
@@ -138,16 +144,17 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
         transform.up = direction;
     }
 
-    private IEnumerator ShotDelay()
+    private IEnumerator FireDelay()
     {
-        yield return new WaitForSeconds(shotDelay);
-        canShot = true;
+        yield return new WaitForSeconds(fireDelay);
+        canFire = true;
     }
 
-    private void Shot()
+    private void Fire()
     {
         Bullet bullet = (Bullet)bulletPool.Get();
         bullet.Shot(this, bulletDeparturePoint.position, (bulletDeparturePoint.position - transform.position).normalized);
+        onFire?.Invoke();
     }
 
     private void OnTriggerEnter(Collider _collider)
@@ -156,14 +163,16 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
         Bullet bullet = _collider.gameObject.GetComponent<Bullet>();
         Ufo ufo = _collider.gameObject.GetComponent<Ufo>();
 
-        if (asteroid != null || (bullet != null && bullet.Shooter != this) || ufo != null)
+        if (asteroid != null || (bullet != null && bullet.Shooter != (IShooter)this) || ufo != null)
         {
             Debug.Log("Старшип взорвался! Илон будет не доволен... :(");
+
+            onExplode?.Invoke();
 
             CountHealthPoints--;
             if (CountHealthPoints == 0)
             {
-                onExploded?.Invoke();
+                onEndedHealthPoints?.Invoke();
                 ResetPoints();
                 Respawn();
             }
@@ -178,6 +187,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     private void Blinking()
     {
         collider.enabled = false;
+        onBlinking?.Invoke();
         coroutineBlink = Blink();
         StartCoroutine(coroutineBlink);
     }
@@ -188,12 +198,12 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
         transform.position = startPosition;
         rb.velocity = Vector3.zero;
 
-        if(coroutineShotDelay != null)
+        if(coroutineFireDelay != null)
         {
-            StopCoroutine(coroutineShotDelay);
+            StopCoroutine(coroutineFireDelay);
         }
 
-        canShot = true;
+        canFire = true;
     }
 
     public void ResetPoints()
@@ -217,6 +227,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
             starshipModel.SetActive(true);
             yield return new WaitForSeconds(intervalBlinking * 0.5f);
         }
+        onBlinked?.Invoke();
         collider.enabled = true;
     }
 }

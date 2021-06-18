@@ -11,11 +11,11 @@ public class GamePoints : MonoBehaviour
 
     private void Awake()
     {
-        starship.onChangeHealth += ChangeHealth;
+        starship.onChangeGamehPoints += ChangeGamehPoints;
     }
 
-    private void ChangeHealth(int countHP)
+    private void ChangeGamehPoints(int countGP)
     {
-        text.text = countHP.ToString();
+        text.text = countGP.ToString();
     }
 }

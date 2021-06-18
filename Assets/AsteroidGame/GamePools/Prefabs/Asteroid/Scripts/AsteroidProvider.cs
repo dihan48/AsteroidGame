@@ -1,12 +1,15 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class AsteroidProvider : MonoBehaviour
 {
+    public Action<AsteroidProvider> onClear;
+
     private BaseAsteroid asteroid;
     private AsteroidParts asteroidParts;
 
-    public Action<AsteroidProvider> onClear;
+    private IEnumerator coroutineNotifyClearProviderDelay;
 
     public void Init(float speed, Vector2 direction, Vector3 position)
     {
@@ -48,13 +51,43 @@ public class AsteroidProvider : MonoBehaviour
     private void NotifyClearProvider(AsteroidParts _asteroidParts)
     {
         _asteroidParts.onAllClear -= NotifyClearProvider;
-        onClear?.Invoke(this);
+        if (coroutineNotifyClearProviderDelay != null)
+        {
+            StopCoroutine(coroutineNotifyClearProviderDelay);
+        }
+        coroutineNotifyClearProviderDelay = NotifyClearProviderDelay();
+        StartCoroutine(coroutineNotifyClearProviderDelay);
     }
 
     private void NotifyClearProvider(BaseAsteroid _asteroid)
     {
         _asteroid.onExplodWithoutSpawnParts -= NotifyClearProvider;
         _asteroid.onExplod -= NotifyClearProvider;
+        if (coroutineNotifyClearProviderDelay != null)
+        {
+            StopCoroutine(coroutineNotifyClearProviderDelay);
+        }
+        coroutineNotifyClearProviderDelay = NotifyClearProviderDelay();
+        StartCoroutine(coroutineNotifyClearProviderDelay);
+    }
+
+    private IEnumerator NotifyClearProviderDelay()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        if(audio == null)
+        {
+            yield return null;
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (audio.isPlaying)
+            {
+                yield return new WaitForSeconds(audio.clip.length - audio.time);
+            }
+        }
+
         onClear?.Invoke(this);
+        coroutineNotifyClearProviderDelay = null;
     }
 }

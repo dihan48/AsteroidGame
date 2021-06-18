@@ -7,8 +7,8 @@ public class ObjectPool : MonoBehaviour
     [SerializeField]
     private GameObject prefab;
 
-    private List<IObjectPool> _available = new List<IObjectPool>();
-    private List<IObjectPool> _inUse = new List<IObjectPool>();
+    private List<IObjectPool> available = new List<IObjectPool>();
+    private List<IObjectPool> inUse = new List<IObjectPool>();
 
     public Action onInUseEmpty;
 
@@ -24,26 +24,26 @@ public class ObjectPool : MonoBehaviour
     {
         IObjectPool objectInPool;
 
-        if(_available.Count == 0)
+        if(available.Count == 0)
         {
             objectInPool = Instantiate(prefab, transform).GetComponent<IObjectPool>();
         }
         else
         {
-            objectInPool = _available[0];
-            _available.Remove(objectInPool);
+            objectInPool = available[0];
+            available.Remove(objectInPool);
         }
 
         objectInPool.Enable();
         objectInPool.onRelease += Release;
 
-        _inUse.Add(objectInPool);
+        inUse.Add(objectInPool);
         return objectInPool;
     }
 
     public void Release(IObjectPool objectInPool)
     {
-        if (_inUse.Remove(objectInPool) == false)
+        if (inUse.Remove(objectInPool) == false)
         {
             return;
         }
@@ -51,10 +51,10 @@ public class ObjectPool : MonoBehaviour
         {
             objectInPool.onRelease -= Release;
             objectInPool.Disable();
-            _available.Add(objectInPool);
+            available.Add(objectInPool);
         }
 
-        if (_inUse.Count == 0)
+        if (inUse.Count == 0)
         {
             onInUseEmpty?.Invoke();
         }
@@ -62,13 +62,13 @@ public class ObjectPool : MonoBehaviour
 
     public void AllRelease()
     {
-        _inUse.ForEach((IObjectPool objectInPool) =>
+        inUse.ForEach((IObjectPool objectInPool) =>
         {
             objectInPool.onRelease -= Release;
             objectInPool.Disable();
-            _available.Add(objectInPool);
+            available.Add(objectInPool);
         });
 
-        _inUse.Clear();
+        inUse.Clear();
     }
 }

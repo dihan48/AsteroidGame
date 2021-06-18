@@ -42,7 +42,7 @@ public class GameLoop : MonoBehaviour
     public void Init()
     {
         spaceship.gameObject.SetActive(true);
-        spaceship.onExploded += GameOver;
+        spaceship.onEndedHealthPoints += GameOver;
         ufoProvider.Init();
         asteroidPoolProvider.Init();
     }
@@ -86,7 +86,7 @@ public class GameLoop : MonoBehaviour
         spaceship.ResetPoints();
         spaceship.Respawn();
         spaceship.gameObject.SetActive(false);
-        spaceship.onExploded -= GameOver;
+        spaceship.onEndedHealthPoints -= GameOver;
 
         asteroidPoolProvider.StopSpawn();
         asteroidPoolProvider.AllRelease();
