@@ -5,7 +5,7 @@ public class Bullet : MonoBehaviour, IObjectPool
     [SerializeField]
     private float speed = 15;
 
-    public System.Action<IObjectPool> onRelease { get; set; }
+    public System.Action<IObjectPool> OnRelease { get; set; }
 
     public IShooter Shooter { get; private set; }
 
@@ -24,12 +24,12 @@ public class Bullet : MonoBehaviour, IObjectPool
 
     public void SubscribeRelease(System.Action<IObjectPool> fnc)
     {
-        onRelease += fnc;
+        OnRelease += fnc;
     }
 
     public void UnsubscribeRelease(System.Action<IObjectPool> fnc)
     {
-        onRelease -= fnc;
+        OnRelease -= fnc;
     }
 
     public void Shot(IShooter _shooter, Vector3 startPosition, Vector2 _direction)
@@ -66,7 +66,7 @@ public class Bullet : MonoBehaviour, IObjectPool
     private void Destroy()
     {
         gameObject.SetActive(false);
-        onRelease?.Invoke(this);
+        OnRelease?.Invoke(this);
     }
 
     private void OnTriggerEnter(Collider collider)

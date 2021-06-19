@@ -10,6 +10,8 @@ public class ObjectPool : MonoBehaviour
     private List<IObjectPool> available = new List<IObjectPool>();
     private List<IObjectPool> inUse = new List<IObjectPool>();
 
+    public List<IObjectPool> InUse { get => new List<IObjectPool>(inUse); }
+
     public Action onInUseEmpty;
 
     private void Awake()
@@ -35,7 +37,7 @@ public class ObjectPool : MonoBehaviour
         }
 
         objectInPool.Enable();
-        objectInPool.onRelease += Release;
+        objectInPool.OnRelease += Release;
 
         inUse.Add(objectInPool);
         return objectInPool;
@@ -49,7 +51,7 @@ public class ObjectPool : MonoBehaviour
         }
         else
         {
-            objectInPool.onRelease -= Release;
+            objectInPool.OnRelease -= Release;
             objectInPool.Disable();
             available.Add(objectInPool);
         }
@@ -64,7 +66,7 @@ public class ObjectPool : MonoBehaviour
     {
         inUse.ForEach((IObjectPool objectInPool) =>
         {
-            objectInPool.onRelease -= Release;
+            objectInPool.OnRelease -= Release;
             objectInPool.Disable();
             available.Add(objectInPool);
         });

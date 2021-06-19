@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ public class AsteroidPoolProvider : MonoBehaviour
     private float spawnAsteroidsDelay = 2f;
     [SerializeField]
     private ObjectPool asteroidPool;
+
+    public Action OnSpawn;
 
     private int countAsteroids;
     private IEnumerator coroutineRespawnAsteroids;
@@ -28,6 +31,8 @@ public class AsteroidPoolProvider : MonoBehaviour
         {
             asteroidPool.Get();
         }
+
+        OnSpawn?.Invoke();
     }
 
     private void StartRespawnAsteroids()

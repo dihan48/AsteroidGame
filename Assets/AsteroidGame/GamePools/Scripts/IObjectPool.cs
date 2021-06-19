@@ -2,7 +2,7 @@ using System;
 
 public interface IObjectPool
 {
-    Action<IObjectPool> onRelease { get; set; }
+    Action<IObjectPool> OnRelease { get; set; }
     void Enable();
     void Disable();
 }
