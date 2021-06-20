@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NewAsteroid
@@ -12,11 +10,12 @@ namespace NewAsteroid
 
         public Action<BaseAsteroid> onExplod;
         public Action<BaseAsteroid> onExplodWithoutSpawn;
+        public Action onSideEffectsEnded;
 
         public Vector2 Direction => direction;
-        [SerializeField]
+        public bool HaveSideEffects { get; set; } = false;
+
         private Vector2 direction;
-        [SerializeField]
         private float speed;
 
         public void Init(float _speed, Vector2 _direction, Vector3 position)
@@ -25,6 +24,11 @@ namespace NewAsteroid
             direction = _direction;
             speed = _speed;
             gameObject.SetActive(true);
+        }
+
+        public void SideEffectsEnded()
+        {
+            onSideEffectsEnded?.Invoke();
         }
 
         private void Update()
@@ -40,6 +44,11 @@ namespace NewAsteroid
             {
                 gameObject.SetActive(false);
                 onExplod?.Invoke(this);
+
+                if(HaveSideEffects == false)
+                {
+                    SideEffectsEnded();
+                }
             }
 
             IShooter shooter = collider.gameObject.GetComponent<IShooter>();
@@ -47,6 +56,11 @@ namespace NewAsteroid
             {
                 gameObject.SetActive(false);
                 onExplodWithoutSpawn?.Invoke(this);
+
+                if (HaveSideEffects == false)
+                {
+                    SideEffectsEnded();
+                }
             }
         }
 

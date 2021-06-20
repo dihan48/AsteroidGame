@@ -24,7 +24,10 @@ namespace NewAsteroid
         public void Enable()
         {
             mainProvider = GetComponent<AsteroidProvider>();
+
             mainProvider.OnExplodeProvider += ExplodeProvider;
+            mainProvider.OnSideEffectsEnded += Release;
+
             mainProvider.Init();
 
             float speed = Random.Range(minSpeed, maxSpeed);
@@ -46,13 +49,18 @@ namespace NewAsteroid
             int countAllAvailableProvider = mainProvider.GetCountAllAvailableProviders();
             int countExplode = countAllProviders - countAllAvailableProvider;
             countAllProviders -= countExplode;
+
+            OnExplodeProvider?.Invoke(countExplode);
+        }
+
+        private void Release()
+        {
             if (mainProvider.GetCountAllAvailableProviders() == 0)
             {
                 OnRelease?.Invoke(this);
             }
-
-            OnExplodeProvider?.Invoke(countExplode);
         }
+
         public int GetCountAllAvailableProviders()
         {
             return mainProvider.GetCountAllAvailableProviders();

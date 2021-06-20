@@ -18,6 +18,7 @@ namespace NewAsteroid
         public System.Action OnExplodeProvider;
         public System.Action OnExplodeWithSpawn;
         public System.Action OnExplodeWithoutSpawn;
+        public System.Action OnSideEffectsEnded;
 
         [SerializeField]
         private AsteroidProvider[] providers;
@@ -34,6 +35,7 @@ namespace NewAsteroid
                 asteroid.gameObject.SetActive(false);
                 asteroid.onExplod += Explode;
                 asteroid.onExplodWithoutSpawn += ExplodWithoutSpawn;
+                asteroid.onSideEffectsEnded += SideEffectsEnded;
             }
 
             providers = this.ExtGetComponentsInChild<AsteroidProvider>();
@@ -41,6 +43,7 @@ namespace NewAsteroid
             {
                 providers[i].Init();
                 providers[i].OnExplodeProvider += ExplodeProvider;
+                providers[i].OnSideEffectsEnded += SideEffectsEnded;
             }
 
             CountAvailableProviders = providers.Length;
@@ -107,6 +110,11 @@ namespace NewAsteroid
         private void ExplodeProvider()
         {
             OnExplodeProvider?.Invoke();
+        }
+
+        private void SideEffectsEnded()
+        {
+            OnSideEffectsEnded?.Invoke();
         }
 
         private float[] PartsAngles(int countParts)
