@@ -84,7 +84,9 @@ public class GameLoop : MonoBehaviour
     private void GameEnd()
     {
         spaceship.ResetPoints();
+        spaceship.DisableBlinking();
         spaceship.Respawn();
+
         spaceship.gameObject.SetActive(false);
         spaceship.onEndedHealthPoints -= GameOver;
 

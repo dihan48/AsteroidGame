@@ -166,7 +166,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
 
         if (asteroid != null || newAsteroid != null || (bullet != null && bullet.Shooter != (IShooter)this) || ufo != null)
         {
-            Debug.Log("Старшип взорвался! Илон будет не доволен... :(");
+            Debug.Log("РЎС‚Р°СЂС€РёРї РІР·РѕСЂРІР°Р»СЃСЏ! РР»РѕРЅ Р±СѓРґРµС‚ РЅРµ РґРѕРІРѕР»РµРЅ... :(");
 
             onExplode?.Invoke();
 
@@ -175,6 +175,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
             {
                 onEndedHealthPoints?.Invoke();
                 ResetPoints();
+                DisableBlinking();
                 Respawn();
             }
             else
@@ -211,10 +212,16 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     {
         CountHealthPoints = startHealthhPoints;
         CountGamePoints = 0;
+    }
 
+    public void DisableBlinking()
+    {
         if (coroutineBlink != null)
         {
             StopCoroutine(coroutineBlink);
+            onBlinked?.Invoke();
+            collider.enabled = true;
+            starshipModel.SetActive(true);
         }
     }
 
