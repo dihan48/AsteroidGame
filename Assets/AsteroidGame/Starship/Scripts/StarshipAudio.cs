@@ -15,6 +15,8 @@ public class StarshipAudio : MonoBehaviour
 
     private Starship starship;
 
+    private GameLoop gameLoop;
+
     private void Start()
     {
         starship = GetComponent<Starship>();
@@ -24,6 +26,12 @@ public class StarshipAudio : MonoBehaviour
         starship.onExplode += Explode;
         starship.onBlinking += StartBlink;
         starship.onBlinked += StopBlink;
+
+        gameLoop = GameWorld.instance.GetComponent<GameLoop>();
+        if(gameLoop != null)
+        {
+            gameLoop.onPause += SetPauseBlink;
+        }
     }
 
     private void Fire()
@@ -51,6 +59,18 @@ public class StarshipAudio : MonoBehaviour
             return;
         }
         blink.Play();
+    }
+
+    private void SetPauseBlink(bool value)
+    {
+        if (value)
+        {
+            blink.Pause();
+        }
+        else
+        {
+            blink.UnPause();
+        }
     }
 
     private void StopBlink()
