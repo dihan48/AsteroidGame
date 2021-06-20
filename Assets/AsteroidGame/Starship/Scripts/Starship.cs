@@ -160,10 +160,11 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     private void OnTriggerEnter(Collider _collider)
     {
         BaseAsteroid asteroid = _collider.gameObject.GetComponent<BaseAsteroid>();
+        NewAsteroid.BaseAsteroid newAsteroid = _collider.gameObject.GetComponent<NewAsteroid.BaseAsteroid>();
         Bullet bullet = _collider.gameObject.GetComponent<Bullet>();
         Ufo ufo = _collider.gameObject.GetComponent<Ufo>();
 
-        if (asteroid != null || (bullet != null && bullet.Shooter != (IShooter)this) || ufo != null)
+        if (asteroid != null || newAsteroid != null || (bullet != null && bullet.Shooter != (IShooter)this) || ufo != null)
         {
             Debug.Log("Старшип взорвался! Илон будет не доволен... :(");
 

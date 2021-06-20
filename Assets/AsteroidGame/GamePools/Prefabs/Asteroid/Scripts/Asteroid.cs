@@ -10,7 +10,7 @@ public class Asteroid : MonoBehaviour, IObjectPool
 
     private AsteroidProvider mainAsteroidProvider;
 
-    public System.Action<IObjectPool> onRelease { get; set; }
+    public System.Action<IObjectPool> OnRelease { get; set; }
 
     public void Enable()
     {
@@ -34,6 +34,6 @@ public class Asteroid : MonoBehaviour, IObjectPool
 
     public void Explode(AsteroidProvider asteroidProvider)
     {
-        onRelease?.Invoke(this);
+        OnRelease?.Invoke(this);
     }
 }

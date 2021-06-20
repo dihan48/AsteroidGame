@@ -10,10 +10,10 @@ public class SettingControl : MonoBehaviour
     private Text text;
 
     [SerializeField]
-    private string keyboard = "клавиатура";
+    private string keyboard = "РєР»Р°РІРёР°С‚СѓСЂР°";
 
     [SerializeField]
-    private string mouse = "клавиатура + мышь";
+    private string mouse = "РєР»Р°РІРёР°С‚СѓСЂР° + РјС‹С€СЊ";
 
     [SerializeField]
     private InputController inputController;
