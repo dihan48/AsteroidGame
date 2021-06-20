@@ -33,24 +33,14 @@ jobs:
         with:
           name: Build-WebGL
           path: build/WebGL
-
-      - name: Pushes to another repository
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-        with:
-          source-directory: 'build/WebGL/WebGL'
-          destination-github-username: ${{ secrets.USER_NAME }}
-          destination-repository-name: ${{ secrets.REPO_NAME }}
-          user-email: ${{ secrets.EMAIL }}
-          target-branch: main
+          
       - name: Commit files
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
           USER_EMAIL: ${{ secrets.EMAIL }}
           USER_NAME: ${{ secrets.USER_NAME }}
           DESTINATION_REPOSITORY_USERNAME: ${{ secrets.USER_NAME }}
-          DESTINATION_REPOSITORY_NAME: altv-test
+          DESTINATION_REPOSITORY_NAME: EpicSpaceFix
           DESTINATION_BRANCH: main
           OUTPUT_BRANCH: main
           DESTINATION_FOLDER: ./
