@@ -15,12 +15,12 @@ public class UfoAudio : MonoBehaviour
     {
         ufo = GetComponent<Ufo>();
 
-        ufo.onFire += Fire;
+        ufo.OnFire += Fire;
 
         gameLoop = GameWorld.instance.GetComponent<GameLoop>();
         if (gameLoop != null)
         {
-            gameLoop.onPause += SetPauseMove;
+            gameLoop.OnPause += SetPauseMove;
         }
     }
 

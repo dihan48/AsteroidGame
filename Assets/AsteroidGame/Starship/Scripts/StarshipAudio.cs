@@ -21,16 +21,16 @@ public class StarshipAudio : MonoBehaviour
     {
         starship = GetComponent<Starship>();
 
-        starship.onFire += Fire;
-        starship.onAcceleration += Acceleration;
-        starship.onExplode += Explode;
-        starship.onBlinking += StartBlink;
-        starship.onBlinked += StopBlink;
+        starship.OnFire += Fire;
+        starship.OnAcceleration += Acceleration;
+        starship.OnExplode += Explode;
+        starship.OnBlinking += StartBlink;
+        starship.OnBlinked += StopBlink;
 
         gameLoop = GameWorld.instance.GetComponent<GameLoop>();
         if(gameLoop != null)
         {
-            gameLoop.onPause += SetPauseBlink;
+            gameLoop.OnPause += SetPauseBlink;
         }
     }
 

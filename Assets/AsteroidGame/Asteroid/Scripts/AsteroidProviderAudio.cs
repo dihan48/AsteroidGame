@@ -16,8 +16,8 @@ namespace NewAsteroid
 
             if (asteroid != null)
             {
-                asteroid.onExplod += Explode;
-                asteroid.onExplodWithoutSpawn += Explode;
+                asteroid.OnExplod += Explode;
+                asteroid.OnExplodWithoutSpawn += Explode;
                 asteroid.HaveSideEffects = true;
             }
         }

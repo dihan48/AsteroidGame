@@ -10,7 +10,7 @@ public class Asteroid : MonoBehaviour, IObjectPool
 
     private AsteroidProvider mainAsteroidProvider;
 
-    public System.Action<IObjectPool> OnRelease { get; set; }
+    public event System.Action<IObjectPool> OnRelease;
 
     public void Enable()
     {
@@ -21,14 +21,14 @@ public class Asteroid : MonoBehaviour, IObjectPool
         Vector3 position = GameWorld.instance.RandomAsteroidPosition();
 
         mainAsteroidProvider.Init(speed, direction, position);
-        mainAsteroidProvider.onClear += Explode;
+        mainAsteroidProvider.OnClear += Explode;
 
         gameObject.SetActive(true);
     }
 
     public void Disable()
     {
-        mainAsteroidProvider.onClear -= Explode;
+        mainAsteroidProvider.OnClear -= Explode;
         gameObject.SetActive(false);
     }
 

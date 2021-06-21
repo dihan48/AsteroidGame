@@ -13,7 +13,7 @@ public class GameLoop : MonoBehaviour
     [SerializeField]
     private UfoProvider ufoProvider;
 
-    public Action<bool> onPause;
+    public event Action<bool> OnPause;
 
     public bool IsGameStarted { get; private set; }
     public bool IsPause {
@@ -21,7 +21,7 @@ public class GameLoop : MonoBehaviour
         set
         {
             Time.timeScale = value ? 0: 1;
-            onPause?.Invoke(value);
+            OnPause?.Invoke(value);
             isPause = value;
         }
     }
@@ -42,7 +42,7 @@ public class GameLoop : MonoBehaviour
     public void Init()
     {
         spaceship.gameObject.SetActive(true);
-        spaceship.onEndedHealthPoints += GameOver;
+        spaceship.OnEndedHealthPoints += GameOver;
         ufoProvider.Init();
         asteroidPoolProvider.Init();
     }
@@ -88,7 +88,7 @@ public class GameLoop : MonoBehaviour
         spaceship.Respawn();
 
         spaceship.gameObject.SetActive(false);
-        spaceship.onEndedHealthPoints -= GameOver;
+        spaceship.OnEndedHealthPoints -= GameOver;
 
         asteroidPoolProvider.StopSpawn();
         asteroidPoolProvider.AllRelease();

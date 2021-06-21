@@ -12,7 +12,7 @@ public class ObjectPool : MonoBehaviour
 
     public List<IObjectPool> InUse { get => new List<IObjectPool>(inUse); }
 
-    public Action onInUseEmpty;
+    public event Action OnInUseEmpty;
 
     private void Awake()
     {
@@ -58,7 +58,7 @@ public class ObjectPool : MonoBehaviour
 
         if (inUse.Count == 0)
         {
-            onInUseEmpty?.Invoke();
+            OnInUseEmpty?.Invoke();
         }
     }
 

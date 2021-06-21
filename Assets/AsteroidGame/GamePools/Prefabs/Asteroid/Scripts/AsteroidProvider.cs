@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AsteroidProvider : MonoBehaviour
 {
-    public Action<AsteroidProvider> onClear;
+    public event Action<AsteroidProvider> OnClear;
 
     private BaseAsteroid asteroid;
     private AsteroidParts asteroidParts;
@@ -18,22 +18,22 @@ public class AsteroidProvider : MonoBehaviour
         if (asteroidParts != null)
         {
             asteroidParts.gameObject.SetActive(false);
-            asteroidParts.onAllClear += NotifyClearProvider;
+            asteroidParts.OnAllClear += NotifyClearProvider;
         }
 
         asteroid = this.ExtGetComponentInChild<BaseAsteroid>();
 
         if (asteroid != null)
         {
-            asteroid.onExplodWithoutSpawnParts += NotifyClearProvider;
+            asteroid.OnExplodWithoutSpawnParts += NotifyClearProvider;
 
             if (asteroidParts != null)
             {
-                asteroid.onExplod += SpawnChilds;
+                asteroid.OnExplod += SpawnChilds;
             }
             else
             {
-                asteroid.onExplod += NotifyClearProvider;
+                asteroid.OnExplod += NotifyClearProvider;
             }
 
             asteroid.Init(speed, direction, position);
@@ -44,13 +44,13 @@ public class AsteroidProvider : MonoBehaviour
 
     private void SpawnChilds(BaseAsteroid _asteroid)
     {
-        _asteroid.onExplod -= SpawnChilds;
+        _asteroid.OnExplod -= SpawnChilds;
         asteroidParts.Init(_asteroid.Direction, _asteroid.transform.position);
     }
 
     private void NotifyClearProvider(AsteroidParts _asteroidParts)
     {
-        _asteroidParts.onAllClear -= NotifyClearProvider;
+        _asteroidParts.OnAllClear -= NotifyClearProvider;
         if (coroutineNotifyClearProviderDelay != null)
         {
             StopCoroutine(coroutineNotifyClearProviderDelay);
@@ -61,8 +61,8 @@ public class AsteroidProvider : MonoBehaviour
 
     private void NotifyClearProvider(BaseAsteroid _asteroid)
     {
-        _asteroid.onExplodWithoutSpawnParts -= NotifyClearProvider;
-        _asteroid.onExplod -= NotifyClearProvider;
+        _asteroid.OnExplodWithoutSpawnParts -= NotifyClearProvider;
+        _asteroid.OnExplod -= NotifyClearProvider;
         if (coroutineNotifyClearProviderDelay != null)
         {
             StopCoroutine(coroutineNotifyClearProviderDelay);
@@ -87,7 +87,7 @@ public class AsteroidProvider : MonoBehaviour
             }
         }
 
-        onClear?.Invoke(this);
+        OnClear?.Invoke(this);
         coroutineNotifyClearProviderDelay = null;
     }
 }

@@ -11,7 +11,7 @@ public class HealthPoints : MonoBehaviour
 
     private void Awake()
     {
-        starship.onChangeHealth += ChangeHealth;
+        starship.OnChangeHealth += ChangeHealth;
     }
 
     private void ChangeHealth(int countHP)

@@ -27,14 +27,14 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     [SerializeField]
     private int startHealthhPoints = 3;
 
-    public Action onFire;
-    public Action onExplode;
-    public Action onEndedHealthPoints;
-    public Action onAcceleration;
-    public Action onBlinking;
-    public Action onBlinked;
-    public Action<int> onChangeHealth;
-    public Action<int> onChangeGamehPoints;
+    public event Action OnFire;
+    public event Action OnExplode;
+    public event Action OnEndedHealthPoints;
+    public event Action OnAcceleration;
+    public event Action OnBlinking;
+    public event Action OnBlinked;
+    public event Action<int> OnChangeHealth;
+    public event Action<int> OnChangeGamehPoints;
 
     private int countGP;
     private int CountGamePoints
@@ -45,7 +45,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
         }
         set
         {
-            onChangeGamehPoints?.Invoke(value);
+            OnChangeGamehPoints?.Invoke(value);
             countGP = value;
         }
     }
@@ -59,7 +59,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
         }
         set
         {
-            onChangeHealth?.Invoke(value);
+            OnChangeHealth?.Invoke(value);
             countHP = value;
         }
     }
@@ -125,7 +125,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     public void Acceleration()
     {
         rb.AddForce(transform.up * accelerate);
-        onAcceleration?.Invoke();
+        OnAcceleration?.Invoke();
     }
     public void Shooting()
     {
@@ -154,7 +154,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     {
         Bullet bullet = (Bullet)bulletPool.Get();
         bullet.Shot(this, bulletDeparturePoint.position, (bulletDeparturePoint.position - transform.position).normalized);
-        onFire?.Invoke();
+        OnFire?.Invoke();
     }
 
     private void OnTriggerEnter(Collider _collider)
@@ -168,12 +168,12 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
         {
             Debug.Log("Старшип взорвался! Илон будет не доволен... :(");
 
-            onExplode?.Invoke();
+            OnExplode?.Invoke();
 
             CountHealthPoints--;
             if (CountHealthPoints == 0)
             {
-                onEndedHealthPoints?.Invoke();
+                OnEndedHealthPoints?.Invoke();
                 ResetPoints();
                 DisableBlinking();
                 Respawn();
@@ -189,7 +189,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
     private void Blinking()
     {
         collider.enabled = false;
-        onBlinking?.Invoke();
+        OnBlinking?.Invoke();
         coroutineBlink = Blink();
         StartCoroutine(coroutineBlink);
     }
@@ -219,7 +219,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
         if (coroutineBlink != null)
         {
             StopCoroutine(coroutineBlink);
-            onBlinked?.Invoke();
+            OnBlinked?.Invoke();
             collider.enabled = true;
             starshipModel.SetActive(true);
         }
@@ -235,7 +235,7 @@ public class Starship : MonoBehaviour, IShooter, ItriggerOnBullet
             starshipModel.SetActive(true);
             yield return new WaitForSeconds(intervalBlinking * 0.5f);
         }
-        onBlinked?.Invoke();
+        OnBlinked?.Invoke();
         collider.enabled = true;
     }
 }

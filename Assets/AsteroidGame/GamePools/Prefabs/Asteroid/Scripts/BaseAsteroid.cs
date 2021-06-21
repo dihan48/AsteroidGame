@@ -6,8 +6,8 @@ public class BaseAsteroid : MonoBehaviour, ItriggerOnBullet
     [SerializeField]
     private int gamePoints = 20;
 
-    public Action<BaseAsteroid> onExplod;
-    public Action<BaseAsteroid> onExplodWithoutSpawnParts;
+    public event Action<BaseAsteroid> OnExplod;
+    public event Action<BaseAsteroid> OnExplodWithoutSpawnParts;
 
     public Vector2 Direction => direction;
 
@@ -34,14 +34,14 @@ public class BaseAsteroid : MonoBehaviour, ItriggerOnBullet
         if (bullet != null)
         {
             gameObject.SetActive(false);
-            onExplod?.Invoke(this);
+            OnExplod?.Invoke(this);
         }
 
         IShooter shooter = collider.gameObject.GetComponent<IShooter>();
         if (shooter != null)
         {
             gameObject.SetActive(false);
-            onExplodWithoutSpawnParts?.Invoke(this);
+            OnExplodWithoutSpawnParts?.Invoke(this);
         }
     }
 

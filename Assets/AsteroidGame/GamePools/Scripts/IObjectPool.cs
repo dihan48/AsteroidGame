@@ -2,7 +2,8 @@ using System;
 
 public interface IObjectPool
 {
-    Action<IObjectPool> OnRelease { get; set; }
+    event Action<IObjectPool> OnRelease;
+
     void Enable();
     void Disable();
 }

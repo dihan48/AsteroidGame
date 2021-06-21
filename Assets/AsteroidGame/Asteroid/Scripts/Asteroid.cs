@@ -13,9 +13,9 @@ namespace NewAsteroid
         [SerializeField]
         protected float maxSpeed = 6f;
 
-        public System.Action<IObjectPool> OnRelease { get; set; }
+        public event System.Action<IObjectPool> OnRelease;
 
-        public System.Action<int> OnExplodeProvider;
+        public event System.Action<int> OnExplodeProvider;
 
         private AsteroidProvider mainProvider;
 

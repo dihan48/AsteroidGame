@@ -11,7 +11,7 @@ public class GamePoints : MonoBehaviour
 
     private void Awake()
     {
-        starship.onChangeGamehPoints += ChangeGamehPoints;
+        starship.OnChangeGamehPoints += ChangeGamehPoints;
     }
 
     private void ChangeGamehPoints(int countGP)

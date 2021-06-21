@@ -13,8 +13,8 @@ public class AsteroidProviderAudio : MonoBehaviour
 
         if (asteroid != null)
         {
-            asteroid.onExplod += Explode;
-            asteroid.onExplodWithoutSpawnParts += Explode;
+            asteroid.OnExplod += Explode;
+            asteroid.OnExplodWithoutSpawnParts += Explode;
         }
     }
 

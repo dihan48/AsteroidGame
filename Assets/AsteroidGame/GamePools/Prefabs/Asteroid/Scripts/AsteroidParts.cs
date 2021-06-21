@@ -14,7 +14,7 @@ public class AsteroidParts : MonoBehaviour
 
     private List<AsteroidProvider> asteroidProviders = new List<AsteroidProvider>();
 
-    public System.Action<AsteroidParts> onAllClear;
+    public event System.Action<AsteroidParts> OnAllClear;
 
     public void Init(Vector2 totalDirection, Vector3 partsStartPosition)
     {
@@ -26,7 +26,7 @@ public class AsteroidParts : MonoBehaviour
 
         for (int i = 0; i < asteroidProviders.Count; i++)
         {
-            asteroidProviders[i].onClear += RemoveProvider;
+            asteroidProviders[i].OnClear += RemoveProvider;
             asteroidProviders[i].Init(partsSpeed, totalDirection.Rotate(partsAngles[i]), partsStartPosition);
         }
 
@@ -35,12 +35,12 @@ public class AsteroidParts : MonoBehaviour
 
     private void RemoveProvider(AsteroidProvider asteroidProvider)
     {
-        asteroidProvider.onClear -= RemoveProvider;
+        asteroidProvider.OnClear -= RemoveProvider;
         asteroidProviders.Remove(asteroidProvider);
 
         if (asteroidProviders.Count == 0)
         {
-            onAllClear?.Invoke(this);
+            OnAllClear?.Invoke(this);
         }
     }
 

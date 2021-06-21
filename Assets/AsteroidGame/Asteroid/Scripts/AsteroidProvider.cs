@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NewAsteroid
@@ -15,10 +13,8 @@ namespace NewAsteroid
 
         public int CountAvailableProviders { get; private set; }
 
-        public System.Action OnExplodeProvider;
-        public System.Action OnExplodeWithSpawn;
-        public System.Action OnExplodeWithoutSpawn;
-        public System.Action OnSideEffectsEnded;
+        public event System.Action OnExplodeProvider;
+        public event System.Action OnSideEffectsEnded;
 
         [SerializeField]
         private AsteroidProvider[] providers;
@@ -33,9 +29,9 @@ namespace NewAsteroid
             if (asteroid != null)
             {
                 asteroid.gameObject.SetActive(false);
-                asteroid.onExplod += Explode;
-                asteroid.onExplodWithoutSpawn += ExplodWithoutSpawn;
-                asteroid.onSideEffectsEnded += SideEffectsEnded;
+                asteroid.OnExplod += Explode;
+                asteroid.OnExplodWithoutSpawn += ExplodWithoutSpawn;
+                asteroid.OnSideEffectsEnded += SideEffectsEnded;
             }
 
             providers = this.ExtGetComponentsInChild<AsteroidProvider>();

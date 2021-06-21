@@ -14,14 +14,14 @@ public class UfoProvider : MonoBehaviour
 
     public void Init()
     {
-        ufo.onExplode += StartSpawnUfoDelay;
+        ufo.OnExplode += StartSpawnUfoDelay;
         coroutineSpawnUfoDelay = SpawnUfoDelay();
         StartCoroutine(coroutineSpawnUfoDelay);
     }
 
     private void StartSpawnUfoDelay()
     {
-        ufo.onExplode -= StartSpawnUfoDelay;
+        ufo.OnExplode -= StartSpawnUfoDelay;
         Init();
     }
 
@@ -35,7 +35,7 @@ public class UfoProvider : MonoBehaviour
 
     public void StopSpawn()
     {
-        ufo.onExplode -= StartSpawnUfoDelay;
+        ufo.OnExplode -= StartSpawnUfoDelay;
         if(coroutineSpawnUfoDelay != null)
         {
             StopCoroutine(coroutineSpawnUfoDelay);

@@ -10,7 +10,7 @@ public class UfoProviderAudio : MonoBehaviour
 
     private void Start()
     {
-        ufo.onExplode += Explode;
+        ufo.OnExplode += Explode;
     }
 
     private void Explode()

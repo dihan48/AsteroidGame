@@ -13,7 +13,7 @@ public class AsteroidPoolProvider : MonoBehaviour
     [SerializeField]
     private ObjectPool asteroidPool;
 
-    public Action OnSpawn;
+    public event Action OnSpawn;
 
     private int countAsteroids;
     private IEnumerator coroutineRespawnAsteroids;
@@ -22,7 +22,7 @@ public class AsteroidPoolProvider : MonoBehaviour
     {
         countAsteroids = startCountAsteroids;
         SpawnAsteroids();
-        asteroidPool.onInUseEmpty += StartRespawnAsteroids;
+        asteroidPool.OnInUseEmpty += StartRespawnAsteroids;
     }
 
     private void SpawnAsteroids()
@@ -54,7 +54,7 @@ public class AsteroidPoolProvider : MonoBehaviour
         {
             StopCoroutine(coroutineRespawnAsteroids);
         }
-        asteroidPool.onInUseEmpty -= StartRespawnAsteroids;
+        asteroidPool.OnInUseEmpty -= StartRespawnAsteroids;
     }
 
     public void AllRelease()

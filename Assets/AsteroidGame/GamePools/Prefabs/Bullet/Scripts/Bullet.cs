@@ -5,7 +5,7 @@ public class Bullet : MonoBehaviour, IObjectPool
     [SerializeField]
     private float speed = 15;
 
-    public System.Action<IObjectPool> OnRelease { get; set; }
+    public event System.Action<IObjectPool> OnRelease;
 
     public IShooter Shooter { get; private set; }
 

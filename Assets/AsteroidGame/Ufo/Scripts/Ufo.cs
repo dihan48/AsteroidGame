@@ -21,8 +21,8 @@ public class Ufo : MonoBehaviour, IShooter, ItriggerOnBullet
     private float speed;
     private float fireDelay;
 
-    public System.Action onFire;
-    public System.Action onExplode;
+    public event System.Action OnFire;
+    public event System.Action OnExplode;
 
     private IEnumerator coroutineFireDelay;
 
@@ -71,7 +71,7 @@ public class Ufo : MonoBehaviour, IShooter, ItriggerOnBullet
 
     private void Explode()
     {
-        onExplode?.Invoke();
+        OnExplode?.Invoke();
         gameObject.SetActive(false);
     }
 
@@ -87,7 +87,7 @@ public class Ufo : MonoBehaviour, IShooter, ItriggerOnBullet
     {
         while (true){
             yield return new WaitForSeconds(fireDelay);
-            onFire?.Invoke();
+            OnFire?.Invoke();
             Bullet bullet = (Bullet)bulletPool.Get();
             bullet.Shot(this, transform.position, (Starship.position - transform.position).normalized);
         }

@@ -11,7 +11,7 @@ public class Menu : MonoBehaviour
     private void Awake()
     {
         gameObject.SetActive(false);
-        gameLoop.onPause += (bool isPause) => gameObject.SetActive(isPause);
+        gameLoop.OnPause += (bool isPause) => gameObject.SetActive(isPause);
     }
 
     private void OnEnable()

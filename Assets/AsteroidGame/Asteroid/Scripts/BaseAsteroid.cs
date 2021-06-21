@@ -8,9 +8,9 @@ namespace NewAsteroid
         [SerializeField]
         private int gamePoints = 20;
 
-        public Action<BaseAsteroid> onExplod;
-        public Action<BaseAsteroid> onExplodWithoutSpawn;
-        public Action onSideEffectsEnded;
+        public event Action<BaseAsteroid> OnExplod;
+        public event Action<BaseAsteroid> OnExplodWithoutSpawn;
+        public event Action OnSideEffectsEnded;
 
         public Vector2 Direction => direction;
         public bool HaveSideEffects { get; set; } = false;
@@ -28,7 +28,7 @@ namespace NewAsteroid
 
         public void SideEffectsEnded()
         {
-            onSideEffectsEnded?.Invoke();
+            OnSideEffectsEnded?.Invoke();
         }
 
         private void Update()
@@ -43,7 +43,7 @@ namespace NewAsteroid
             if (bullet != null)
             {
                 gameObject.SetActive(false);
-                onExplod?.Invoke(this);
+                OnExplod?.Invoke(this);
 
                 if(HaveSideEffects == false)
                 {
@@ -55,7 +55,7 @@ namespace NewAsteroid
             if (shooter != null)
             {
                 gameObject.SetActive(false);
-                onExplodWithoutSpawn?.Invoke(this);
+                OnExplodWithoutSpawn?.Invoke(this);
 
                 if (HaveSideEffects == false)
                 {
